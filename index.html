@@ -35,17 +35,22 @@
 
     <section class="panel recorder">
       <div class="section-title">☠ <span>RECORD A NEW PANAUTI EVENT</span></div>
-      <div class="slider-wrap">
-        <input id="panautiSlider" type="range" min="0" max="100" value="0" aria-label="Slide right to record a new panauti event" />
-        <div class="slider-hint" id="sliderHint">Slide right to record a new panauti</div>
-      </div>
-      <div class="fields">
-        <label>SEVERITY<select id="severity"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></label>
-        <label>CATEGORY<select id="category"><option>General</option><option>Work</option><option>Travel</option><option>Personal</option><option>College</option><option>Money</option><option>Social</option><option>Other</option></select></label>
-        <label>DATE &amp; TIME<input id="eventDate" type="datetime-local" /></label>
-        <label>NOTES (OPTIONAL)<input id="notes" type="text" maxlength="120" placeholder="Add a note..." /></label>
-      </div>
-      <p class="lock-note">◈ Slide to the right to lock in this panauti forever.</p>
+      <form id="eventForm" class="event-form">
+        <div class="fields">
+          <label>SEVERITY<select id="severity"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></label>
+          <label>CATEGORY<select id="category">
+            <option>SPC</option>
+            <option>Faculty</option>
+            <option>BATCH MEET</option>
+            <option>heavy neend ke nawab contri</option>
+            <option>Others — please specify</option>
+          </select></label>
+          <label id="otherCategoryWrap" class="hidden">SPECIFY CATEGORY<input id="otherCategory" type="text" maxlength="80" placeholder="Please specify..." /></label>
+          <label>DATE &amp; TIME<input id="eventDate" type="datetime-local" /></label>
+          <label>NOTES (OPTIONAL)<input id="notes" type="text" maxlength="120" placeholder="Add a note..." /></label>
+        </div>
+        <button class="submit-btn" id="submitEvent" type="submit">＋ SUBMIT PANAUTI</button>
+      </form>
     </section>
 
     <section class="panel history-panel">
@@ -57,21 +62,17 @@
       <button class="outline" id="viewAll" type="button">☷ &nbsp; View All History</button>
     </section>
 
-    <section class="cinematic cute-scene" aria-label="Cute animated Sikh character">
-      <div class="sky"></div><div class="city"></div><div class="road"></div>
-      <div class="powerlines"></div>
-      <div class="cloud cloud-a"></div><div class="cloud cloud-b"></div>
-      <div class="sparkles"><span>✦</span><span>✦</span><span>♥</span></div>
-      <div class="man cute-sardar" role="img" aria-label="Cute animated Sikh boy walking with a backpack">
-        <div class="backpack"><i></i></div>
-        <div class="turban"><i></i><b></b><span></span></div>
-        <div class="head"><div class="ear"></div><div class="eye eye-a"></div><div class="eye eye-b"></div><div class="nose"></div><div class="smile"></div><div class="beard"></div></div>
-        <div class="neck"></div><div class="torso"></div>
-        <div class="arm arm-back"></div><div class="arm arm-front"></div><div class="hand"></div>
-        <div class="leg leg-a"><div class="shoe"></div></div><div class="leg leg-b"><div class="shoe"></div></div>
+    <section class="simple-scene" aria-label="Simple animated Sikh character">
+      <div class="simple-ground"></div>
+      <div class="simple-character" role="img" aria-label="Cute animated Sikh boy with a backpack">
+        <div class="simple-turban"></div>
+        <div class="simple-face"><i class="eye left"></i><i class="eye right"></i><span class="simple-beard"></span></div>
+        <div class="simple-body"><span class="heart">♥</span></div>
+        <div class="simple-arm left-arm"></div><div class="simple-arm right-arm"></div>
+        <div class="simple-leg left-leg"></div><div class="simple-leg right-leg"></div>
+        <div class="simple-bag"></div>
       </div>
-      <div class="speech">OHO! PANAUTI AGAIN 😭</div>
-      <div class="caption">EVERY DAY. ANOTHER PANAUTI.</div>
+      <div class="simple-caption">PANAUTI AGAIN 😭</div>
     </section>
     <footer>Local persistence enabled · Your history stays in this browser.</footer>
   </main>

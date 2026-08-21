@@ -19,7 +19,7 @@ function render(){
   const events=[...state.events].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
   $('totalCount').textContent=events.length;
   $('lastRecorded').textContent=events[0] ? formatDate(events[0].timestamp) : 'No events yet';
-  $('history').innerHTML = events.length ? events.slice(0,5).map(row).join('') : '<div class="empty">No panauti recorded yet. Slide right and accept your fate.</div>';
+  $('history').innerHTML = events.length ? events.slice(0,5).map(row).join('') : '<div class="empty">No panauti recorded yet. Submit your first one.</div>';
   $('allHistory').innerHTML = events.length ? events.map(row).join('') : '<div class="empty">Your record is mercifully clean.</div>';
   document.querySelectorAll('[data-delete]').forEach(btn=>btn.addEventListener('click',()=>remove(btn.dataset.delete)));
 }
@@ -28,17 +28,39 @@ function row(e){
 }
 function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 function addEvent(){
-  const event={id:crypto.randomUUID?.() || String(Date.now()),count:state.events.length+1,timestamp:new Date($('eventDate').value ? $('eventDate').value : Date.now()).toISOString(),severity:$('severity').value,category:$('category').value,notes:$('notes').value.trim()};
-  state.events.push(event); save(); render();
-  $('panautiSlider').value=0; $('sliderHint').textContent='Recorded. Slide right for the next panauti.'; $('notes').value=''; $('eventDate').value=localDateTimeValue();
+  const selectedCategory=$('category').value;
+  const specified=$('otherCategory').value.trim();
+  const category=selectedCategory==='Others — please specify' ? (specified || 'Others — please specify') : selectedCategory;
+  const event={
+    id:crypto.randomUUID?.() || String(Date.now()),
+    count:state.events.length+1,
+    timestamp:new Date($('eventDate').value ? $('eventDate').value : Date.now()).toISOString(),
+    severity:$('severity').value,
+    category,
+    notes:$('notes').value.trim()
+  };
+  state.events.push(event);
+  save();
+  render();
+  $('notes').value='';
+  $('otherCategory').value='';
+  $('category').value='SPC';
+  $('otherCategoryWrap').classList.add('hidden');
+  $('eventDate').value=localDateTimeValue();
   document.querySelector('.history-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function remove(id){state.events=state.events.filter(e=>e.id!==id);state.events.sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));state.events.forEach((e,i)=>e.count=i+1);save();render();}
 function clear(){if(confirm('Clear the entire panauti history? This cannot be undone.')){state={events:[]};save();render();}}
 $('eventDate').value=localDateTimeValue();
-$('panautiSlider').addEventListener('input',e=>{const v=Number(e.target.value);$('sliderHint').textContent=v>=100?'Release to record the panauti.':`Slide right to record a new panauti · ${v}%`;});
-$('panautiSlider').addEventListener('change',e=>{if(Number(e.target.value)>=100){addEvent();}});
-$('resetAll').addEventListener('click',clear);$('clearHistory').addEventListener('click',clear);
-$('viewAll').addEventListener('click',()=>$('allHistoryDialog').showModal());$('closeDialog').addEventListener('click',()=>$('allHistoryDialog').close());
+$('eventForm').addEventListener('submit',e=>{e.preventDefault();addEvent();});
+$('category').addEventListener('change',e=>{
+  const show=e.target.value==='Others — please specify';
+  $('otherCategoryWrap').classList.toggle('hidden',!show);
+  if(show) $('otherCategory').focus();
+});
+$('resetAll').addEventListener('click',clear);
+$('clearHistory').addEventListener('click',clear);
+$('viewAll').addEventListener('click',()=>$('allHistoryDialog').showModal());
+$('closeDialog').addEventListener('click',()=>$('allHistoryDialog').close());
 $('allHistoryDialog').addEventListener('click',e=>{if(e.target===$('allHistoryDialog')) $('allHistoryDialog').close();});
 render();
